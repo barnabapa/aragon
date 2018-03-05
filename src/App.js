@@ -2,7 +2,9 @@ import Web3 from 'web3'
 import React from 'react'
 import createHistory from 'history/createHashHistory'
 import { AragonApp } from '@aragon/ui'
+import { networkContextType } from './context/provideNetwork'
 import { parsePath } from './routing'
+import { makeEtherscanBaseUrl } from './utils'
 import initWrapper from './aragonjs-wrapper'
 import Wrapper from './Wrapper'
 import Onboarding from './onboarding/Onboarding'
@@ -11,8 +13,15 @@ import Onboarding from './onboarding/Onboarding'
 const PROVIDER = new Web3.providers.WebsocketProvider('ws://localhost:8545')
 const WALLET_PROVIDER = window.web3.currentProvider
 const ENS = '0x409ba3dd291bb5d48d5b4404f5efa207441f6cba'
+const NETWORK = {
+  etherscanBaseUrl: makeEtherscanBaseUrl('rinkeby'),
+  name: 'Rinkeby testnet',
+}
 
 class App extends React.Component {
+  static childContextTypes = {
+    network: networkContextType,
+  }
   state = {
     locator: {},
     prevLocator: null,
@@ -29,6 +38,10 @@ class App extends React.Component {
     const { pathname, search } = this.history.location
     this.handleHistoryChange({ pathname, search })
     this.history.listen(this.handleHistoryChange)
+  }
+
+  getChildContext() {
+    return { network: NETWORK }
   }
 
   // Handle URL changes
