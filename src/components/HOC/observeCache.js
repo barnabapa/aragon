@@ -2,8 +2,11 @@ import React from 'react'
 import getDisplayName from 'react-display-name'
 
 // Higher-order component for convenient subscriptions to an aragon.js cache key
-const observeCache = (Component, cacheKey, { defaultValue, forcedValue }) => {
-  return class extends React.Component {
+const observeCache = (
+  cacheKey,
+  { defaultValue, forcedValue } = {}
+) => Component =>
+  class extends React.Component {
     static displayName = `ObserveCache(${getDisplayName(Component)})`
     static propTypes = {
       cache: ({ cache }, _, componentName) => {
@@ -46,6 +49,5 @@ const observeCache = (Component, cacheKey, { defaultValue, forcedValue }) => {
       return <Component {...this.state} {...this.props} />
     }
   }
-}
 
 export default observeCache
