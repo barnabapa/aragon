@@ -20,10 +20,8 @@ const observeCache = (
         }
       },
     }
-    constructor(props) {
-      super(props)
-      const { cache } = props
-      this.observeUpdates(cache)
+    componentDidMount() {
+      this.observeUpdates(this.props.cache)
     }
     componentWillReceiveProps({ cache: nextCache }) {
       const { cache } = this.props
