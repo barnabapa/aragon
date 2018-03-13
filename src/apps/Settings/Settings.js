@@ -12,6 +12,7 @@ import {
 import Option from './components/Option'
 import observeCache from '../../components/HOC/observeCache'
 import provideNetwork from '../../context/provideNetwork'
+import { compose } from '../../utils'
 
 const AVAILABLE_CURRENCIES = ['USD', 'EUR', 'GBP', 'CAD', 'RMB', 'JPY']
 // const AVAILABLE_CURRENCIES = ['USD'] // Only use USD for now
@@ -117,19 +118,17 @@ class Settings extends React.Component {
   }
 }
 
-export default observeCache(
-  observe(
-    provideNetwork(Settings),
-    observable => observable.map(settings => ({ ...settings })),
-    {}
-  ),
-  CACHE_KEY,
-  {
+const enhance = compose(
+  observeCache(CACHE_KEY, {
     defaultValue: {
       selectedCurrency: AVAILABLE_CURRENCIES[0],
     },
     forcedValue: {
       currencies: AVAILABLE_CURRENCIES,
     },
-  }
+  }),
+  observe(observable => observable.map(settings => ({ ...settings })), {}),
+  provideNetwork
 )
+
+export default enhance(Settings)
